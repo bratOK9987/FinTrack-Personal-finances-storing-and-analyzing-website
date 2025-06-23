@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Financial Summary – FinTrack</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css">
+    <link rel="stylesheet" href="{% static 'fintrack/style.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            width: 100%;
+            background-color: #1b2a41;
+            color: white;
+            padding: 15px 40px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-3 {
+            appearance: none;
+            background-color: #2ea44f;
+            border: 1px solid rgba(27, 31, 35, .15);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button-3:hover {
+            background-color: #2c974b;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2, h3 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .summary-box {
+            margin-bottom: 30px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .summary-box p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        table.pure-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .pure-table th, .pure-table td {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .pure-table thead {
+            background-color: #f0f0f0;
+        }
+
+        .back-button {
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FinTrack</h1>
+        <nav>
+            <a href="{% url 'add_record' %}" class="button-3">+ Add Record</a>
+            <a href="{% url 'budget' %}" class="button-3">Budget</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <h2>📊 Financial Summary</h2>
+
+        <div class="summary-box">
+            <p><strong>Total Income:</strong> <span style="color: green;">€{{ total_income }}</span></p>
+            <p><strong>Total Expenses:</strong> <span style="color: red;">€{{ total_expense }}</span></p>
+            <p><strong>Balance:</strong>
+                {% if balance >= 0 %}
+                    <span style="color: green;">+€{{ balance }}</span>
+                {% else %}
+                    <span style="color: red;">-€{{ abs_balance }}</span>
+                {% endif %}
+            </p>
+        </div>
+
+        <h3>📅 Monthly Overview</h3>
+
+        <table class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Income (€)</th>
+                    <th>Expenses (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for month, data in monthly_data %}
+                    <tr>
+                        <td>{{ month }}</td>
+                        <td style="color: green;">{{ data.income }}</td>
+                        <td style="color: red;">{{ data.expense }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="3">No data available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="back-button">
+            <a href="{% url 'dashboard' %}" class="button-3">← Back to Dashboard</a>
+        </div>
+
+    </main>
+
+</body>
+</html>

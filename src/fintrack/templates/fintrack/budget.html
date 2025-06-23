@@ -1,0 +1,244 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Set Budget – FinTrack</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css">
+    <link rel="stylesheet" href="{% static 'fintrack/style.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            width: 100%;
+            background-color: #1b2a41;
+            color: white;
+            padding: 15px 40px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-3 {
+            appearance: none;
+            background-color: #2ea44f;
+            border: 1px solid rgba(27, 31, 35, .15);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button-3:hover {
+            background-color: #2c974b;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .message-box {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .message-success {
+            background-color: #e6ffed;
+            color: #1a7f37;
+            border: 1px solid #a7f3d0;
+        }
+
+        .message-error {
+            background-color: #ffe6e6;
+            color: #cc0000;
+            border: 1px solid #f5c2c7;
+        }
+
+        .current-targets {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .current-targets p {
+            margin: 6px 0;
+            font-size: 16px;
+        }
+
+        .label-icon {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .progress-over {
+            color: red;
+            font-weight: bold;
+        }
+
+        .progress-ok {
+            color: green;
+        }
+
+        form.pure-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            width: 560px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FinTrack</h1>
+        <nav>
+            <a href="{% url 'add_record' %}" class="button-3">+ Add Record</a>
+            <a href="{% url 'summary' %}" class="button-3">View Summary</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <h2>📅 Budget Settings for {{ month_label }}</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-box {% if message.tags == 'success' %}message-success{% else %}message-error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" class="pure-form pure-form-stacked">
+            {% csrf_token %}
+            <label for="expense_limit">Update Expense Limit (€)</label>
+            <input type="number" name="expense_limit" id="expense_limit" step="0.01" value="{{ budget.expense_limit }}">
+        
+            <label for="income_target">Update Income Target (€) <small>(optional)</small></label>
+            <input type="number" name="income_target" id="income_target" step="0.01" value="{{ budget.income_target }}">
+        
+            <button type="submit" class="button-3">💾 Save Budget</button>
+        </form>
+
+        <div class="current-targets">
+            <p><span class="label-icon">💸</span><strong>Expense Limit:</strong>
+                {% if budget.expense_limit is not None %}
+                    €{{ budget.expense_limit|floatformat:2 }}
+                {% else %}
+                    <em>Not set</em>
+                {% endif %}
+            </p>
+
+            <p><span class="label-icon">📈</span><strong>Income Target:</strong>
+                {% if budget.income_target is not None %}
+                    €{{ budget.income_target|floatformat:2 }}
+                {% else %}
+                    <em>Not set</em>
+                {% endif %}
+            </p>
+        </div>
+
+        {% if budget.income_target and current_income is not None %}
+            <div class="current-targets">
+                <p><strong>📥 Income Progress</strong></p>
+                <p>Received: €{{ current_income|floatformat:2 }} / €{{ budget.income_target|floatformat:2 }}</p>
+                <p>
+                    Progress:
+                    {% if income_progress_percent >= 100 %}
+                        <span class="progress-ok">{{ income_progress_percent|floatformat:1 }}%</span> – Target met!
+                    {% else %}
+                        <span>{{ income_progress_percent|floatformat:1 }}%</span>
+                    {% endif %}
+                </p>
+            </div>
+        {% endif %}
+
+
+        {% if progress_percent is not None %}
+            <div class="current-targets">
+                <p><strong>📊 Budget Progress</strong></p>
+                <p>Spent: €{{ current_expenses|floatformat:2 }} / €{{ budget.expense_limit|floatformat:2 }}</p>
+                <p>
+                    Progress:
+                    {% if progress_percent > 100 %}
+                        <span class="progress-over">{{ progress_percent|floatformat:1 }}%</span> – Over budget!
+                    {% else %}
+                        <span class="progress-ok">{{ progress_percent|floatformat:1 }}%</span>
+                    {% endif %}
+                </p>
+            </div>
+        {% endif %}
+
+        <div class="current-targets">
+            <p><strong>Expense Prediction</strong></p>
+            {% if progress_percent is not None %}
+                <p>📅 Days passed: {{ days_passed }} / {{ days_in_month }}</p>
+                <p>📉 Predicted total expenses: <strong>€{{ predicted_expense|floatformat:2 }}</strong></p>
+                <p>
+                    {% if predicted_expense > budget.expense_limit %}
+                        <span class="progress-over">You are on track to overspend!</span>
+                    {% else %}
+                        <span class="progress-ok">You are within budget.</span>
+                    {% endif %}
+                </p>
+            {% else %}
+                <p><em>No prediction available – set an expense limit first.</em></p>
+            {% endif %}
+        </div>
+
+        
+
+        <a href="{% url 'dashboard' %}" class="button-3">← Back to Dashboard</a>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Record - FinTrack</title>
+    <link rel="stylesheet" href="{% static 'fintrack/style.css' %}">
+
+    <style>
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-page {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #2ea44f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #228c3b;
+        }
+
+        nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #2ea44f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>FinTrack</h1>
+    <nav>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </nav>
+</header>
+
+<section class="form-page">
+    <h2>Edit Financial Record</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="record_type">Type:</label>
+        <select name="record_type" required>
+            <option value="income" {% if record.record_type == 'income' %}selected{% endif %}>Income</option>
+            <option value="expense" {% if record.record_type == 'expense' %}selected{% endif %}>Expense</option>
+        </select>
+
+        <label for="amount">Amount:</label>
+        <input type="number" step="0.01" name="amount" placeholder="Amount" required min="0.01" max="1000000" value="{{ record.amount }}">
+
+        <label for="description">Description:</label>
+        <input type="text" name="description" placeholder="E.g., Salary, Rent, Groceries" required maxlength="255" value="{{ record.description }}">
+
+        <label for="date">Date:</label>
+        <input type="date" name="date" required value="{{ record.date|date:'Y-m-d' }}">
+
+        <label for="tags">Tags (comma-separated):</label>
+        <input type="text" name="tags" placeholder="e.g. groceries, rent, travel" value="{{ tags_string }}">
+
+        <button type="submit">Save Changes</button>
+    </form>
+</section>
+
+</body>
+</html>

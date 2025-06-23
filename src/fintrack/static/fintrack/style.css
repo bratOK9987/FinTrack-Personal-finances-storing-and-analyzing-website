@@ -1,0 +1,116 @@
+/* === Reset & Base === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+body {
+    background: linear-gradient(45deg, #49a09d, #5f2c82);
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 100;
+    color: #fff;
+}
+
+/* === Header === */
+header {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+header nav a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+/* Add Record button in nav */
+.add-record {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-left: 20px;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.add-record:hover {
+    background-color: #2980b9;
+}
+
+/* === Flash Messages === */
+.message-box {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 12px;
+    border-radius: 6px;
+    max-width: 500px;
+    margin: 20px auto;
+    text-align: center;
+    color: #fff;
+}
+
+.message-success {
+    color: #2ecc71;
+}
+
+.message-error {
+    color: #e74c3c;
+}
+
+.message-default {
+    color: #fff;
+}
+
+/* === Container === */
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* === Table === */
+table {
+    border-collapse: collapse;
+  }
+   th {
+    background: #ccc;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background: #efefef;
+  }
+  
+  tr:hover {
+    background: #d1d1d1;
+  }
+
