@@ -1,8 +1,9 @@
 # Personal finances storing and analyzing website
+This project was created during the Software Architecture course. 
 
 # Description
 
-This project was created during the Software Architecture course. The essence of the project is to effectively control personal financial flows by entering data into the system. Each user will enter data on received and spent money to view the overall picture. The analysis will be available with total expenses, expenses for a certain period (day, week, month, year), saved money, deferred money, borrowed money, creating goals for the month, and budget distribution.
+The essence of the project is to effectively control personal financial flows by entering data into the system. Each user will enter data on received and spent money to view the overall picture. The analysis will be available with total expenses, expenses for a certain period (day, week, month, year), saved money, deferred money, borrowed money, creating goals for the month, and budget distribution.
 
 # Technologies
 
